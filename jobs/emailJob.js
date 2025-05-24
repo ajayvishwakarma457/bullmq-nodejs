@@ -11,12 +11,6 @@ export const sendEmailJob = async (job) => {
     }
   });
 
-  await transporter.sendMail({
-    from: '"Queue Mailer" info@astaracademy.in',
-    to,
-    subject,
-    text
-  });
-
+  await transporter.sendMail({from: '"Queue Mailer" info@astaracademy.in',to,subject,text});
   console.log(`Email sent to ${to}`);
 };
