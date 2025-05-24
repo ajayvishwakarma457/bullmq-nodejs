@@ -1,18 +1,13 @@
-const { Worker } = require('bullmq');
+import { Worker } from 'bullmq';
+import connection from './config/redis.js';
+import { sendEmailJob } from './jobs/emailJob.js';
 
-const worker = new Worker('email-queue',
-  async (job) => {
-    const sendEmail = () => new Promise((res) => setTimeout(res, 5000));
-    console.log(`Message rec id: ${job.id}`);
-    console.log('Processing message');
-    console.log(`Sending email to ${job.data.email}`);
-    await sendEmail();
-    console.log('Email sent');
-  },
-  {
-    connection: {
-      host: 'localhost',  // use Docker host IP if different
-      port: 6379          // default Redis port
-    }
-  }
-);
+const worker = new Worker('email-queue', sendEmailJob, { connection });
+
+worker.on('completed', job => {
+  console.log(`Job ${job.id} completed`);
+});
+
+worker.on('failed', (job, err) => {
+  console.error(`Job ${job?.id} failed: ${err.message}`);
+});

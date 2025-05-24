@@ -1,21 +1,13 @@
-const {Queue} = require('bullmq');
+import emailQueue from './queues/emailQueue.js';
 
-const notificationQueue = new Queue('email-queue', {
-    connection: {
-        host: 'localhost',  // use Docker host IP if different
-        port: 6379          // default Redis port
-    }
-});
+const addEmailToQueue = async () => {
+  await emailQueue.add('sendEmail', {
+    to: 'recipient@example.com',
+    subject: 'Hello from BullMQ',
+    text: 'This email was sent using a background queue!'
+  });
 
+  console.log('Email job added to queue');
+};
 
-async function init() {
-    const res = await  notificationQueue.add('email to ram', {
-            email:'ram.dev', 
-            subject:'Welcome message', 
-            body: 'Hey ram, Welcome'
-        });
-
-    console.log('Job added to queue', res.id);
-}
-
-init();
+addEmailToQueue();
