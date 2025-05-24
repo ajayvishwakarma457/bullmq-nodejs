@@ -2,13 +2,5 @@ Run the redis server
 docker run -itd -p 6379:6379 redis
 
 run:
-    node producer.js
-
-"scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js", 
-    "worker": "node worker.js"
-},
-
-run:
-npm run worker
+    workers/
+        node emailWorker.js
